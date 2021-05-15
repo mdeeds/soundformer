@@ -1,19 +1,25 @@
+import { Audio } from "./audio";
+import { Player } from "./player";
+
 export class Render {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private playerX: number;
-  private playerY: number;
+  private player: Player;
   private noteIsOn: boolean;
+  private keySet: Set<string>;
+  private audio: Audio;
 
-  public constructor(container: HTMLBodyElement) {
+  public constructor(container: HTMLBodyElement, keySet: Set<string>, a: Audio) {
+    this.keySet = keySet;
+    this.audio = a;
     this.canvas = document.createElement('canvas');
     this.canvas.width = 1500;
     this.canvas.height = 900;
 
     container.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
-    this.playerX = 0;
-    this.playerY = 12;
+    this.player = new Player(0, 12);
+    this.player.setPlatforms([0, 2, 4, 5, 7, 9]);
     this.noteIsOn = false;
 
     this.render();
@@ -25,7 +31,6 @@ export class Render {
   public noteOff() {
     this.noteIsOn = false;
   }
-
   public render() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -42,7 +47,7 @@ export class Render {
     this.ctx.strokeStyle = this.noteIsOn ? 'red' : 'pink';
     this.ctx.lineWidth = 0.6;
     this.ctx.beginPath();
-    this.ctx.arc(this.playerX, this.playerY + 0.5, 0.2, -Math.PI, Math.PI);
+    this.ctx.arc(this.player.x, this.player.y + 0.5, 0.2, -Math.PI, Math.PI);
     this.ctx.stroke();
 
     for (let n = 0; n <= 24; ++n) {
@@ -55,6 +60,13 @@ export class Render {
     }
 
     requestAnimationFrame(() => { this.render(); });
+    if (this.keySet.has('ArrowUp')) {
+      this.player.up();
+    } else if (this.keySet.has('ArrowDown')) {
+      this.player.down();
+    };
+    this.player.advance();
+    this.audio.setNote(this.player.y + 60);
   }
 
   private basicWidth = [
@@ -92,6 +104,4 @@ export class Render {
   private getColor(n: number) {
     return this.basicColor[n % 12];
   }
-
-
 }

@@ -40,7 +40,6 @@ export class Audio {
   }
 
   public noteOn() {
-    console.log('On');
     this.gain.gain.setValueAtTime(1.0, this.audioCtx.currentTime);
   }
 
