@@ -7,6 +7,7 @@ export class Audio {
     this.oscillator = this.audioCtx.createOscillator();
     this.oscillator.type = 'square';
     this.gain = this.audioCtx.createGain();
+    this.gain.gain.setValueAtTime(0, this.audioCtx.currentTime);
     this.oscillator.connect(this.gain);
     this.oscillator.start();
     this.gain.connect(this.audioCtx.destination);
@@ -40,7 +41,7 @@ export class Audio {
   }
 
   public noteOn() {
-    this.gain.gain.setValueAtTime(1.0, this.audioCtx.currentTime);
+    this.gain.gain.setValueAtTime(0.2, this.audioCtx.currentTime);
   }
 
   public noteOff() {

@@ -19,7 +19,7 @@ export class Render {
     container.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
     this.player = new Player(0, 12);
-    this.player.setPlatforms([0, 2, 4, 5, 7, 9]);
+    this.player.setPlatforms([0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24]);
     this.noteIsOn = false;
 
     this.render();
@@ -32,22 +32,23 @@ export class Render {
     this.noteIsOn = false;
   }
   public render() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
     this.ctx.resetTransform();
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // 16 + 1 beats horizontally
     // 24 semitones vertically; also positive = up
     this.ctx.scale(this.canvas.width / 33, -this.canvas.height / 26);
     this.ctx.translate(1, -25);
 
-    this.ctx.fillStyle = '#ddf';
-    this.ctx.fillRect(0, 0, 32, 24);
-
-    this.ctx.strokeStyle = this.noteIsOn ? 'red' : 'pink';
+    this.ctx.strokeStyle = 'red';
     this.ctx.lineWidth = 0.6;
     this.ctx.beginPath();
-    this.ctx.arc(this.player.x, this.player.y + 0.5, 0.2, -Math.PI, Math.PI);
+    if (this.noteIsOn) {
+      this.ctx.arc(this.player.x, this.player.y + 0.5, 0.2,
+        1, 2 * Math.PI - 1);
+    } else {
+      this.ctx.arc(this.player.x, this.player.y + 0.5, 0.2, -Math.PI, Math.PI);
+    }
     this.ctx.stroke();
 
     for (let n = 0; n <= 24; ++n) {
