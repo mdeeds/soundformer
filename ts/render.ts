@@ -67,7 +67,7 @@ export class Render {
       this.player.down();
     };
     this.player.advance();
-    this.audio.setNote(this.player.y + 60);
+    this.audio.setNote(this.player.y + 36);
   }
 
   private basicWidth = [
